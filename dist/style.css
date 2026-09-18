@@ -40,3 +40,5 @@ body>main{grid-column:2;grid-row:2;padding:28px;min-width:0}
  .sidebar .artist-button{width:auto;white-space:nowrap;flex-shrink:0}
  body>main{padding:24px 14px}
 }
+
+main>.statusline{margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:.75rem;line-height:1.8}main>header{margin-bottom:20px}
