@@ -1,0 +1,15 @@
+export const groups=[
+ ['BTS','bts','#7544ad','#f1e8fc','2013-06-13','RM:09-12,Jin:12-04,SUGA:03-09,j-hope:02-18,Jimin:10-13,V:12-30,Jung Kook:09-01'],
+ ['RIIZE','riize','#b9530b','#fff0de','2023-09-04','SHOTARO:11-25,EUNSEOK:03-19,SUNGCHAN:09-13,WONBIN:03-02,SOHEE:11-21,ANTON:03-21'],
+ ['&TEAM','andteam','#b83978','#ffeaf3','2022-12-07','EJ:09-07,FUMA:06-29,K:10-21,NICHOLAS:07-09,YUMA:02-07,JO:07-08,HARUA:05-01,TAKI:05-04,MAKI:02-17'],
+ ['BOYNEXTDOOR','boynextdoor','#2763b5','#e9f2ff','2023-05-30','SUNGHO:09-04,RIWOO:10-22,JAEHYUN:12-04,TAESAN:08-10,LEEHAN:10-20,WOONHAK:11-29'],
+ ['CORTIS','cortis','#846500','#fff6c8','2025-08-18','MARTIN:03-20,JAMES:10-14,JUHOON:01-03,SEONGHYEON:01-13,KEONHO:02-14'],
+ ['ENHYPEN','enhypen','#891d36','#f9e6eb','2020-11-30','JUNGWON:02-09,JAY:04-20,JAKE:11-15,SUNGHOON:12-08,SUNOO:06-24,NI-KI:12-09'],
+ ['NCT WISH','nctwish','#227365','#ddf8ed','2024-02-21','SION:05-11,RIKU:06-28,YUSHI:04-05,JAEHEE:06-21,RYO:08-04,SAKUYA:11-18'],
+ ['TXT','txt','#195d3b','#e3f0e7','2019-03-04','SOOBIN:12-05,YEONJUN:09-13,BEOMGYU:03-13,TAEHYUN:02-05,HUENINGKAI:08-14']
+];
+export function theme(text){const s=String(text).toUpperCase().replace(/[\s-]/g,'');return groups.find(g=>s.includes(g[0].replace(/[\s-]/g,'')))||['','','#436658','#edf3ef'];}
+export function recurring(year){return groups.flatMap(([artist,slug,,,debut,members])=>[...members.split(',').map(m=>{const [name,day]=m.split(':');return {id:`birthday:${slug}:${name}:${year}`,artist,title:`${name} 生日`,date:`${year}-${day}`,kind:'birthday'};}),{id:`anniversary:${slug}:${year}`,artist,title:`${artist} 出道 ${year-Number(debut.slice(0,4))} 週年`,date:`${year}-${debut.slice(5)}`,kind:'anniversary',debut}].filter(e=>!e.debut||year>=Number(debut.slice(0,4))).map(e=>({...e,venue:'每年紀念日',timezone:'Asia/Seoul',source:'團體官方資料',sourceUrl:profileSources[slug],description:'生日及出道紀念日每年顯示。成員名單依收錄時的官方資料。'})));}
+export const profileSources={bts:'https://bts-official.jp/profile/',riize:'https://www.riizeofficial.jp/profile/',andteam:'https://www.andteam-official.jp/profile/',boynextdoor:'https://www.kozofficial.com/artist/profile/BOYNEXTDOOR',cortis:'https://weverse.io/cortis/highlight',enhypen:'https://enhypen-jp.weverse.io/profile',nctwish:'https://weverse.io/nctwish/notice/17488',txt:'https://txt-official.jp/profile/'};
+export function daysUntil(date,timezone='Asia/Taipei',now=new Date()){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:timezone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now);const get=t=>parts.find(p=>p.type===t).value;return Math.round((Date.parse(date+'T00:00:00Z')-Date.parse(`${get('year')}-${get('month')}-${get('day')}T00:00:00Z`))/86400000);}
+export const ticketSites=[['Tickets in Japan','https://www.ticketsinjapan.com/zh-hant/'],['拓元','https://tixcraft.com/'],['ibon','https://ticket.ibon.com.tw/'],['遠大售票','https://ticketplus.com.tw/'],['&TEAM KKTIX 活動','https://kklivetw.kktix.cc/events/efb2a871'],['Ticket PIA 韓流','https://t.pia.jp/feature/hanryu/']];

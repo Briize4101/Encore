@@ -1,0 +1,13 @@
+# Secrets and machine-local settings
+.env
+.env.*
+!.env.example
+# Member email preferences, delivery records and downloaded source caches
+/data/
+# Local backups and dependencies
+backup*/
+*.backup-*
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
