@@ -25,7 +25,7 @@ export function candidates(events,p,now){
 }
 const time=(s,zone)=>new Date(s).toLocaleString('zh-TW',{timeZone:zone,hour12:false});
 export function emailText(items){return items.map(x=>`${x.label}\n${x.event.title}\n${x.at?'台灣時間：'+time(x.at,'Asia/Taipei')+'\n日本時間：'+time(x.at,'Asia/Tokyo'):x.event.date?'活動日期：'+x.event.date:'公告日期／活動時間請確認官方原文'}${x.event.raffle?.requiresRegistration?'\n須已完成 Weverse 事前登記；未登記者不能參加此階段。':''}${x.event.uncertaintyReasons?.length?'\n？部分資訊待確認，請核對原文。':''}\n${link(x.event.sourceUrl)||link(x.event.url)}`).join('\n\n────────\n\n')+'\n\n你收到此信是因為已在 Encore 開啟通知。可在網站右上角「Email 通知」關閉。';}
-export async function createEmailNotifications({file=new URL('./data/email-notifications.json',import.meta.url),env=process.env,getEvents,fetchImpl=fetch,now=()=>Date.now()}={}){
+export async function createEmailNotifications({file=new URL('../data/email-notifications.json',import.meta.url),env=process.env,getEvents,fetchImpl=fetch,now=()=>Date.now()}={}){
  let state={users:{},jobs:{}};
  try{state=JSON.parse(await readFile(file,'utf8'));if(!state.users||!state.jobs)throw Error('invalid notification store');}catch(e){if(e.code!=='ENOENT')throw e;}
  // Serialise mutations and dispatches so a preference update cannot be lost to a send.

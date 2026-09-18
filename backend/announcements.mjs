@@ -1,10 +1,10 @@
 import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
-import {groups} from './dist/fan-data.js';
+import {groups} from '../frontend/fan-data.js';
 import {plain} from './sources.mjs';
 import {releaseInfo,eventUncertainty} from './release-info.mjs';
 import {noticeEvents} from './notice-events.mjs';
 import {festivalInfo} from './festivals.mjs';
-const cache=new URL('./data/announcements.json',import.meta.url);
+const cache=new URL('../data/announcements.json',import.meta.url);
 let state={notices:[],sources:[],updatedAt:null},pending=null,last=0;
 try{state=JSON.parse(await readFile(cache,'utf8'));}catch{}
 const seeds={txt:[39106],enhypen:[35099,37455],boynextdoor:[35847],andteam:[38989,39001],riize:[32821,26847],nctwish:[33506,34967,28778],bts:[36080,32916],cortis:[34026]};
@@ -33,4 +33,4 @@ export function refreshAnnouncements(){if(pending)return pending;if(Date.now()-l
  for(let start=0;start<groups.length;start+=2){await Promise.all(groups.slice(start,start+2).map(async([artist,slug])=>{try{const url=`https://weverse.io/${slug}/highlight?hl=en`;const html=await get(url);const ids=[...new Set([...(seeds[slug]||[]).map(String),...[...html.matchAll(new RegExp('/'+slug+'/notice/(\\d+)','g'))].map(m=>m[1])])];if(!ids.length)throw Error('公開首頁未提供公告連結');let failures=0;
  for(const id of ids){const link=`https://weverse.io/${slug}/notice/${id}`;try{const n=parseNotice(await get(link),artist,link);if(n)notices.set(link,{...n,firstDetectedAt:notices.get(link)?.firstDetectedAt||n.checkedAt});else notices.delete(link);}catch{failures++;}}
  sources.push({artist,url,ok:failures===0,error:failures?`${failures} 則公告無法讀取`:null,count:ids.length});}catch(e){sources.push({artist,ok:false,error:e.message});}}));}
- state={notices:[...notices.values()].sort((a,b)=>b.firstDetectedAt.localeCompare(a.firstDetectedAt)),sources,updatedAt:new Date().toISOString()};await mkdir(new URL('./data/',import.meta.url),{recursive:true});await writeFile(new URL('./data/announcements.json.tmp',import.meta.url),JSON.stringify(state,null,2));await rename(new URL('./data/announcements.json.tmp',import.meta.url),cache);return state;})().finally(()=>pending=null);return pending;}
+ state={notices:[...notices.values()].sort((a,b)=>b.firstDetectedAt.localeCompare(a.firstDetectedAt)),sources,updatedAt:new Date().toISOString()};await mkdir(new URL('../data/',import.meta.url),{recursive:true});await writeFile(new URL('../data/announcements.json.tmp',import.meta.url),JSON.stringify(state,null,2));await rename(new URL('../data/announcements.json.tmp',import.meta.url),cache);return state;})().finally(()=>pending=null);return pending;}

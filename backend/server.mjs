@@ -11,7 +11,7 @@ import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {SOURCES,DEFAULT_ARTISTS,parseMoc,parseKktix,parseSchedule,scheduleCategoryUrl} from './sources.mjs';
-const root=path.dirname(fileURLToPath(import.meta.url));
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 try{process.loadEnvFile(path.join(root,'.env'));}catch(e){if(e.code!=='ENOENT')console.error('無法讀取登入設定檔');}
 let handleAuth;
 const cachePath=path.join(root,'data','events.json');
@@ -59,7 +59,7 @@ const server=http.createServer(async(req,res)=>{
     }
     if(req.method!=='GET')return json(res,405,{error:'不支援此方法'});
     const filename=files.get(url.pathname);if(!filename)return json(res,404,{error:'找不到頁面'});
-    const body=await readFile(path.join(root,'dist',filename));res.writeHead(200,{'Content-Type':filename.endsWith('.html')?'text/html; charset=utf-8':filename.endsWith('.js')?'text/javascript; charset=utf-8':'text/css; charset=utf-8','X-Content-Type-Options':'nosniff','Cache-Control':'no-cache','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data: https://phinf.wevpstatic.net; base-uri 'self'; frame-ancestors 'none'"});res.end(body);
+    const body=await readFile(path.join(root,'frontend',filename));res.writeHead(200,{'Content-Type':filename.endsWith('.html')?'text/html; charset=utf-8':filename.endsWith('.js')?'text/javascript; charset=utf-8':'text/css; charset=utf-8','X-Content-Type-Options':'nosniff','Cache-Control':'no-cache','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data: https://phinf.wevpstatic.net; base-uri 'self'; frame-ancestors 'none'"});res.end(body);
   }catch(e){console.error(e.message);json(res,500,{error:'暫時無法更新，請稍後再試。既有資料已保留。'});}
 });
 server.on('error',e=>{console.error(e.code==='EADDRINUSE'?'網站已啟動或 4173 連接埠被占用。請開啟 http://127.0.0.1:4173':e.message);process.exitCode=1;});

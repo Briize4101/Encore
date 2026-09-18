@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {parseNotice} from './announcements.mjs';import {noticeEvents} from './notice-events.mjs';import {recurring,daysUntil,theme} from './dist/fan-data.js';import {readFile} from 'node:fs/promises';
+import {parseNotice} from '../announcements.mjs';import {noticeEvents} from '../notice-events.mjs';import {recurring,daysUntil,theme} from '../../frontend/fan-data.js';import {readFile} from 'node:fs/promises';
 const page=(title,body)=>`<h1>${title}</h1><p class="whitespace-pre-wrap">${body}</p>`;
 test('exclude merchandise, etiquette and North America time-zone false positives',()=>{for(const [title,body] of [['Concert Merch in Japan','Tour goods'],['Fan Etiquette Notice','concert in seoul'],['Tour in North America Ticket Information','Sale starts 8PM KST. Membership JP.']])assert.equal(parseNotice(page(title,body),'TXT','https://weverse.io/txt/notice/1'),null);});
 test('ticket notices retain regions and raw sale wording',()=>{const n=parseNotice(page('Tour in JAPAN ticket raffle','Presale: October 1, 2026 8PM JST'),'TXT','https://weverse.io/txt/notice/1');assert.deepEqual(n.countries,['JP']);assert.equal(n.kind,'ticket');assert.match(n.snippets[0],/JST/);assert.throws(()=>parseNotice('<h1>Tour</h1>','TXT','x'));});

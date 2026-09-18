@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseMoc,parseKktix,parseSchedule,dateOnly,safeUrl,scheduleCategoryUrl} from './sources.mjs';
+import {parseMoc,parseKktix,parseSchedule,dateOnly,safeUrl,scheduleCategoryUrl} from '../sources.mjs';
 test('multiple performances retain separate dates and unknown time',()=>{
   const events=parseMoc([{UID:'a',title:'Test',webSales:'javascript:alert(1)',showInfo:[{time:'2026/10/24 18:00:00',locationName:'A'},{time:'2026/10/25',locationName:'B'},{time:'2026/13/01'}]}]);
   assert.equal(events.length,2);assert.equal(events[0].time,'18:00');assert.equal(events[1].time,null);assert.notEqual(events[0].id,events[1].id);assert.equal(events[0].ticketUrl,'');

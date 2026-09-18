@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {mkdtemp} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';import {pathToFileURL} from 'node:url';
-import {candidates,emailText,createEmailNotifications,taipeiDay} from './email-notifications.mjs';
+import {candidates,emailText,createEmailNotifications,taipeiDay} from '../email-notifications.mjs';
 const p={artists:['BTS'],seen:[],newEvents:true,ticketTomorrow:true,raffleTomorrow:true};
 const t=Date.parse('2026-09-18T09:00:00+08:00');
 const concert={id:'a',artist:'BTS',title:'BTS concert',date:'2026-11-19',sourceUrl:'https://weverse.io/bts/notice/1'};
